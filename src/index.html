@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name ="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Grafika Komputer-WebGL</title>
+        <script type ="text/javascript" src="utility.js"></script>
+        <script type ="text/javascript" src="Point.js"></script>
+        <script type = "text/javascript" src="Model.js"></script>
+    </head>
+
+    <body>
+        <div class = "sidebar" id="leftbar"></div>
+        <div>
+            <canvas id="gl-canvas" onmousemove="mouseMoveListener(event)" width="750," height="750">
+              Oops ... your browser doesn't support the HTML5 canvas element
+            </canvas>
+          </div>
+      
+
+        <div class="sidebar" id="rightbar">
+            <h3>Gambar Objek Baru</h3>
+            <div class="horizontalbox">
+                <button class="draw-button" id="Line" onclick="drawButton(id)">Line</button>
+                <button class="draw-button" id="Square" onclick="drawButton(id)">Square</button>
+            </div>
+        </div>
+    </body>
+</html>

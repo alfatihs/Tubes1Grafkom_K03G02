@@ -9,3 +9,4 @@ class Model {
     this.isFan = true;
     this.id = id;
   }
+}
