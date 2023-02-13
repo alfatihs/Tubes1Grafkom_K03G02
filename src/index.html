@@ -1,20 +1,22 @@
 <!DOCTYPE html>
-<html lang = "en">
-    <head>
-        <meta charset = "UTF-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name ="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Grafika Komputer-WebGL</title>
-        <script type ="text/javascript" src="utility.js"></script>
-        <script type ="text/javascript" src="Point.js"></script>
-        <script type = "text/javascript" src="Model.js"></script>
-        <script type="text/javascript" src="script.js"></script>
-    </head>
+<html lang="en">
 
-    <body>
-        <html>
-        <script id="vertex-shader" type="x-shader/x-vertex">
-        
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafika Komputer-WebGL</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <script type="text/javascript" src="utility.js"></script>
+    <script type="text/javascript" src="Point.js"></script>
+    <script type="text/javascript" src="Model.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+</head>
+
+<body>
+    <html>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+
         attribute vec4 vPosition;
         attribute vec4 vColor;
         
@@ -27,9 +29,9 @@
             fColor = vColor;
         }
         </script>
-        
-        <script id="fragment-shader" type="x-shader/x-fragment">
-        
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+
         precision mediump float;
         
         varying vec4 fColor;
@@ -39,24 +41,42 @@
             gl_FragColor = fColor;
         }
         </script>
-        </html>
-        <div class = "sidebar" id="leftbar"></div>
-        <div>
-            <canvas id="gl-canvas"  width="750," height="750">
-              Oops ... your browser doesn't support the HTML5 canvas element
-            </canvas>
-          </div>
-      
 
-        <div class="sidebar" id="rightbar">
+    </html>
+    <div class="flex-container">
+        <div class="sidebar">
+            <h1>2D CAD</h1>
+            <h3>Daftar Object</h2>
+        </div>
+        <div>
+            <canvas id="gl-canvas" width="750" height="800 ">
+                Oops ... your browser doesn't support the HTML5 canvas element
+            </canvas>
+        </div>
+
+
+        <div class="sidebar">
             <h3>Gambar Objek Baru</h3>
-            <div class="horizontalbox">
+            <div>
                 <select name="draw" id="draw">
                     <option value="Line">Line</option>
                     <option value="Square">Square</option>
                     <option value="Polygon">Polygon</option>
                 </select>
             </div>
+            <div>
+                <input type="color">
+            </div>
+            <div>
+                <button  class="button">Save</button>
+                <button  class="button">Load</button>
+            </div>
+            
+            <div>
+                <button class="button">clear canvas</button>
+            </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

@@ -39,8 +39,8 @@ window.onload = function init() {
     // event listener mouse klik
     canvas.addEventListener("click", function (event) {
         if (firstClick){
-            var point = vec2(2 * event.clientX / canvas.width - 1,
-                2 * (canvas.height - event.clientY) / canvas.height - 1);
+            var point = vec2(2 * (event.clientX-this.offsetLeft) / canvas.width - 1,
+                2 * (canvas.height - (event.clientY-this.offsetTop)) / canvas.height - 1);
             arrayObject[arrayObject.length - 1].addVertex(point);
             firstClick = false;
         }
@@ -49,8 +49,8 @@ window.onload = function init() {
     });
 
     canvas.addEventListener("mousemove", function (event) {
-        var point = vec2(2 * event.clientX / canvas.width - 1,
-            2 * (canvas.height - event.clientY) / canvas.height - 1);
+        var point = vec2(2 * (event.clientX - this.offsetLeft) / canvas.width - 1,
+            2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1);
         if (afterClick){
             arrayObject[arrayObject.length - 1].addVertex(point);
             afterClick =false;
