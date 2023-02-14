@@ -21,7 +21,6 @@ class Model {
 
   addVertexColor(color){
     this.verticesColor.push(color);
-    console.log(this.verticesColor);
   }
 
   changeLastVertex(vertex){
