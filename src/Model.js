@@ -1,20 +1,27 @@
 //Setiap bangun (Line, Square, Rectangle) harus bisa jalanin ini
 
-var maxNumTriangles = 200;
-var maxNumVertices = 3 * maxNumTriangles;
+// var maxNumTriangles = 200;
+// var maxNumVertices = 3 * maxNumTriangles;
 var cBuffer;
 var vColor;
 var vBuffer;
 var vPosition;
 var vColor;
+var colorPicker = [0.0,0.0,0.0,1.0];
 // pisah polygon 
 class Model {
   constructor(id, name){
     this.vertices = [];
+    this.verticesColor =[];
     this.id = id;
   }
   addVertex(vertex){
     this.vertices.push(vertex);
+  }
+
+  addVertexColor(color){
+    this.verticesColor.push(color);
+    console.log(this.verticesColor);
   }
 
   changeLastVertex(vertex){
@@ -24,8 +31,10 @@ class Model {
   }
   render(gl){
     const vertices = [];
+    const colors = [];
     for (let j = 0; j < this.vertices.length; j++) {
       vertices.push(this.vertices[j]);
+      colors.push(this.verticesColor[j]);
     }
     
     gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
@@ -35,7 +44,7 @@ class Model {
     gl.enableVertexAttribArray(vPosition);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, 16 * maxNumVertices, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW);
 
   
     gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
