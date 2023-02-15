@@ -11,6 +11,8 @@
     <script type="text/javascript" src="Point.js"></script>
     <script type="text/javascript" src="Model.js"></script>
     <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="GenerateObject.js"></script>
+    <script type="text/javascript" src="convexhull.js"></script>
 </head>
 
 <body>
@@ -44,9 +46,11 @@
 
     </html>
     <div class="flex-container">
-        <div class="sidebar">
+        <div class="sidebar" >
             <h1>2D CAD</h1>
-            <h3>Daftar Object</h2>
+            <div id="daftar-objek">
+                <h3>Daftar Object</h2>
+            </div>
         </div>
         <div>
             <canvas id="gl-canvas" width="900" height="800 ">
@@ -78,6 +82,9 @@
             
             <div>
                 <button class="button" id="clear">clear canvas</button>
+            </div>
+            <div id = "mode">
+
             </div>
         </div>
     </div>

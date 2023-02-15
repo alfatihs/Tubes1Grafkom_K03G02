@@ -21,10 +21,18 @@ class Model {
     this.vertices.push(vertex);
   }
 
+  changeVertices(vertices){
+    this.vertices=vertices;
+  }
+  getLengthVertices(){
+    return this.vertices.length;
+  }
   addVertexColor(color){
     this.verticesColor.push(color);
   }
-
+  getVertex(i){
+    return this.vertices[i];
+  }
   changeLastVertex(vertex){
     if (this.vertices.length!=0){
       this.vertices[this.vertices.length-1] = vertex;

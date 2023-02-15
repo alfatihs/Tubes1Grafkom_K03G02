@@ -95,6 +95,7 @@ function newModel() {
     else if (value == "Polygon") {
         arrayObject.push(new Polygon(arrayObject.length))
     }
+    refreshDaftarObjek();
 };
 
 function save(){
