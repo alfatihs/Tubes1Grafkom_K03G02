@@ -10,11 +10,13 @@ var vColor;
 var colorPicker = [0.0,0.0,0.0,1.0];
 // pisah polygon 
 class Model {
+
   constructor(id, name){
+    this.name = name;
     this.vertices = [];
-    this.verticesColor =[];
+    this.verticesColor = [];
     this.id = id;
-  }
+  } 
   addVertex(vertex){
     this.vertices.push(vertex);
   }
@@ -49,12 +51,15 @@ class Model {
     gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(vColor);
   }
+  isEmpty(){
+    return this.vertices.length==0;
+  }
 }
 
 class Polygon extends Model{
 
   constructor(id){
-    super(id, id + ". Polygon");
+    super(id, "Polygon" +id);
   }
 
   render(gl){

@@ -43,14 +43,12 @@ window.onload = function init() {
             firstClick = false;
         }
         afterClick = true;
-        render()
     });
 
 
     canvas.addEventListener("dblclick", function () {
         newModel()
-        afterClick = false;
-        firstClick = true;
+        resetClick()
 
     });
 
@@ -63,7 +61,6 @@ window.onload = function init() {
             afterClick =false;
         }else{
             arrayObject[arrayObject.length - 1].changeLastVertex(point);
-            
         }
         
     });
@@ -78,9 +75,10 @@ window.onload = function init() {
     };
 
     document.getElementById("clear").onclick = function () {
-        arrayObject = [];
-        newModel();
+        location.reload();
     }
+
+    render()
 }
 
 function newModel() {
@@ -99,6 +97,44 @@ function newModel() {
     }
 };
 
+function save(){
+    for (let i = 0; i < arrayObject.length; i++) {
+        if (arrayObject[i].isEmpty()) {
+            arrayObject.splice(i, 1);
+        }
+    }
+    const jsonFile = JSON.parse(JSON.stringify(arrayObject));
+    const file  = document.createElement("a");
+    file.href =URL.createObjectURL(new Blob([JSON.stringify(jsonFile, null, 2)], {
+        type: "text/plain"
+    }));
+    file.setAttribute("download", "data.json");
+}
+function load() {
+    const file = document.getElementById("file-input").files[0];
+    var fileread;
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+    var idx;
+
+    reader.onload = function () {
+        fileread = JSON.parse(reader.result);
+        for (let i = 0; i < fileread.length; i++) {
+            idx = fileread[i]["name"].search("Polygon");
+            if (idx != -1){
+                arrayObject.push(new Polygon(arrayObject.length));
+                for (let j = 0; j < fileread[i]["vertices"].length; j++) {
+                    arrayObject[arrayObject.length-1].addVertex(fileread[i]["vertices"][j]);
+                    arrayObject[arrayObject.length - 1].addVertexColor(fileread[i]["verticesColor"][j]);
+                }
+            }   
+        }
+        newModel()
+        console.log(arrayObject);
+    };
+}
+
 function changeColorVertices(hex){
     const arrayColor = hexToRgb(hex);
     colorPicker = arrayColor;
@@ -107,6 +143,11 @@ function changeColorVertices(hex){
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    for (let i = 0; i < arrayObject.length-1; i++) {
+        if (arrayObject[i].isEmpty()) {
+            arrayObject.splice(i, 1);
+        }
+    }
     for (let i = 0; i < arrayObject.length; i++) {
         arrayObject[i].render(gl);
     }
@@ -116,4 +157,9 @@ function render() {
 function hexToRgb(hex) {
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255, 1.0];
+}
+
+function resetClick(){
+    afterClick = false;
+    firstClick = true;
 }
