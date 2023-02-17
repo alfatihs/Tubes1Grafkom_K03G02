@@ -59,7 +59,7 @@ window.onload = function init() {
             arrayObject[arrayObject.length - 1].addVertex(point);
             arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
             afterClick =false;
-        }else{
+        }else if(!firstClick){
             arrayObject[arrayObject.length - 1].changeLastVertex(point);
         }
         
@@ -105,11 +105,14 @@ function save(){
         }
     }
     const jsonFile = JSON.parse(JSON.stringify(arrayObject));
-    const file  = document.createElement("a");
-    file.href =URL.createObjectURL(new Blob([JSON.stringify(jsonFile, null, 2)], {
+    const downloadFile = document.createElement("a");
+    downloadFile.href = URL.createObjectURL(new Blob([JSON.stringify(jsonFile, null, 2)], {
         type: "text/plain"
     }));
-    file.setAttribute("download", "data.json");
+    downloadFile.setAttribute("download", "data.json");
+    document.body.appendChild(downloadFile);
+    downloadFile.click();
+    document.body.removeChild(downloadFile);
 }
 function load() {
     const file = document.getElementById("file-input").files[0];
@@ -144,12 +147,11 @@ function changeColorVertices(hex){
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    for (let i = 0; i < arrayObject.length-1; i++) {
-        if (arrayObject[i].isEmpty()) {
+    
+    for (let i = 0; i < arrayObject.length; i++) {
+        if (arrayObject[i].isEmpty() && i!=arrayObject.length-1) {
             arrayObject.splice(i, 1);
         }
-    }
-    for (let i = 0; i < arrayObject.length; i++) {
         arrayObject[i].render(gl);
     }
     window.requestAnimFrame(render);
