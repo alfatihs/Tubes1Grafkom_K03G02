@@ -1,5 +1,5 @@
 const refreshDaftarObjek = () => {
-    let inner = '<h3>Daftar Objek</h3>';
+    let inner = '<h3>Daftar Object</h3>';
     for (let i = 0; i < arrayObject.length; i++){
         if (!arrayObject[i].isEmpty()){
             inner += "<div>"

@@ -8,7 +8,7 @@ var index = 0;
 var program;
 var afterClick = false;
 var firstClick = true;
-const model = new Model(0,"Line");
+const model = new Line(0);
 var arrayObject = [model];
 
 
@@ -41,15 +41,24 @@ window.onload = function init() {
             arrayObject[arrayObject.length - 1].addVertex(point);
             arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
             firstClick = false;
+            afterClick=true;
+            
         }
-        afterClick = true;
+
+
+        // if (!firstClick){
+        //     newModel();
+        // }
+    
+        // afterClick = true;
+
     });
 
 
     canvas.addEventListener("dblclick", function () {
         newModel()
         resetClick()
-
+        
     });
 
     canvas.addEventListener("mousemove", function (event) {

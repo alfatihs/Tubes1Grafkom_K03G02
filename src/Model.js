@@ -85,5 +85,14 @@ class Rectangle extends Model {
 }
 
 class Line extends Model {
-  
+  constructor(id){
+    super(id, "Line"+id);
+  }
+
+  render(gl){
+    super.render(gl);
+    gl.drawArrays(gl.LINES, 0, this.vertices.length);
+  }
+
+
 }
