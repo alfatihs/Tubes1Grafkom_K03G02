@@ -35,14 +35,26 @@ window.onload = function init() {
 
     // event listener mouse klik
     canvas.addEventListener("click", function (event) {
-        if (firstClick){
-            var point = vec2(2 * (event.clientX-this.offsetLeft) / canvas.width - 1,
-                2 * (canvas.height - (event.clientY-this.offsetTop)) / canvas.height - 1);
-            arrayObject[arrayObject.length - 1].addVertex(point);
-            arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
-            firstClick = false;
+        if (arrayObject[arrayObject.length - 1] instanceof Square){
+            const x = 2 * (event.clientX - this.offsetLeft) / canvas.width - 1
+            const y = 2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1
+            arrayObject[arrayObject.length-1].addVertex(x,y);
+            newModel()
+        } else if (arrayObject[arrayObject.length-1] instanceof Polygon){
+            if (firstClick){
+                var point = vec2(2 * (event.clientX-this.offsetLeft) / canvas.width - 1,
+                    2 * (canvas.height - (event.clientY-this.offsetTop)) / canvas.height - 1);
+                arrayObject[arrayObject.length - 1].addVertex(point);
+                arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
+                firstClick = false;
+                afterClick=true;
+            }
             afterClick=true;
-            
+        } else if (arrayObject[arrayObject.length - 1] instanceof Rectangle){
+            const x = 2 * (event.clientX - this.offsetLeft) / canvas.width - 1
+            const y = 2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1
+            arrayObject[arrayObject.length-1].addVertex(x,y);
+            newModel();
         }
 
 
