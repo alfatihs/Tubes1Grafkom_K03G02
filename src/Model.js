@@ -40,6 +40,12 @@ class Model {
   addVertexColor(color){
     this.verticesColor.push(color);
   }
+  changeVerticesColor(id, color){
+    this.verticesColor[id] = color
+  }
+  deleteVerticesColor(){
+    this.verticesColor =[];
+  }
   getVertex(i){
     return this.vertices[i];
   }

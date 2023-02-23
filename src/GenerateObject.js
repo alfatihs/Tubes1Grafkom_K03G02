@@ -11,9 +11,9 @@ const refreshDaftarObjek = (select) => {
         }
         
     }
-    
+    resetSelect()
     document.getElementById('daftar-objek').innerHTML = inner;
-
+    
 };
 
 const refreshDaftarVertex = (id) => {
@@ -39,13 +39,15 @@ const refreshDaftarVertex = (id) => {
         sameVertex = false;
         
     }
-
+    resetSelect()
     document.getElementById('daftar-vertex').innerHTML = inner;
 
 };
 
 function select(id){
     refreshDaftarObjek(id)
+    modelSelected = true
+    idxModelSelected = id
     let inner = '';
     if (arrayObject[id] instanceof Line){
 
@@ -75,7 +77,10 @@ function select(id){
 }
 
 function selectVertex(id, id_vertex) {
-    console.log(id_vertex);
+    modelSelected = true
+    idxModelSelected = id
+    vertexSelected = true
+    idxVertexSelected = id_vertex
     let inner = '';
     if (arrayObject[id] instanceof Line) {
         

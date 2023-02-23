@@ -4,8 +4,11 @@ var canvas;
 var gl;
 var draw;
 
-var index = 0;
-var id_model = 1;
+var modelSelected = false;
+var vertexSelected = false;
+var idxVertexSelected = -1;
+var idxModelSelected = -1;
+
 var program;
 var afterClick = false;
 var firstClick = true;
@@ -120,6 +123,12 @@ window.onload = function init() {
 
     document.getElementById("color").onchange = function () {
         changeColorVertices(this.value)
+        if (modelSelected && ! vertexSelected){
+            changeColorModel(idxModelSelected)
+        }
+        else if (modelSelected && vertexSelected){
+            changeColorVertex(idxModelSelected,idxVertexSelected)
+        }
     };
 
     document.getElementById("clear").onclick = function () {
@@ -128,6 +137,7 @@ window.onload = function init() {
 
     render()
 }
+
 
 function newModel() {
     var value = document.getElementById("draw").value;
@@ -151,11 +161,29 @@ function resetClick() {
     firstClick = true;
 }
 
+function resetSelect(){
+    var modelSelected = false;
+    var vertexSelected = false;
+    var idxVertexSelected = -1;
+    var idxModelSelected = -1;
+}
 
 function changeColorVertices(hex){
     const arrayColor = hexToRgb(hex);
     colorPicker = arrayColor;
 }
+
+function changeColorModel(id_model) {
+    arrayObject[id_model].deleteVerticesColor()
+    for (let i = 0; i < arrayObject[id_model].getLengthVertices(); i++) {
+        arrayObject[id_model].addVertexColor(colorPicker);
+    }
+}
+
+function changeColorVertex(idxModel, idxVertex) {
+    arrayObject[idxModel].changeVerticesColor(idxVertex, colorPicker);
+}
+
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
