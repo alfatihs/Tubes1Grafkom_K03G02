@@ -11,6 +11,11 @@ var ver0;
 var ver;
 var newVertices;
 var colorPicker = [0.0,0.0,0.0,1.0];
+
+var id_polygon = 0
+var id_line = 0
+var id_square = 0
+var id_rectangle =0
 // pisah polygon 
 class Model {
 
@@ -23,7 +28,9 @@ class Model {
   addVertex(vertex){
     this.vertices.push(vertex);
   }
-
+  getLengthVertices(){
+    return this.vertices.length;
+  }
   changeVertices(vertices){
     this.vertices=vertices;
   }
@@ -41,6 +48,11 @@ class Model {
       this.vertices[this.vertices.length-1] = vertex;
     }
   }
+
+  changeVertex(i, newvertex) {
+    this.vertices[i] = newvertex
+  }
+
   render(gl){
     const vertices = [];
     const colors = [];
@@ -68,20 +80,27 @@ class Model {
 }
 
 class Polygon extends Model{
-
-  constructor(id){
-    super(id, "Polygon" +id);
+  
+  constructor(){
+    id_polygon +=1
+    super(id_polygon, "Polygon " +id_polygon);
+    
   }
 
   render(gl){
     super.render(gl);
-    gl.drawArrays(gl.TRIANGLES, 0, this.vertices.length);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, this.vertices.length);
+  }
+
+  deleteVertex(id) {
+    this.vertices.splice(id, 1);
   }
 }
 
 class Square extends Model {
-  constructor(id){
-    super(id, "Square" +id);
+  constructor(){
+    id_square +=1
+    super(id_square, "Square " +id_square);
   }
 
   addVertex(x,y){
@@ -97,7 +116,6 @@ class Square extends Model {
     super.addVertexColor(colorPicker);
     super.addVertexColor(colorPicker);
     super.addVertexColor(colorPicker);
-    console.log(this.vertices)
   }
   
   changeSideModel(newLength){
@@ -128,8 +146,9 @@ class Square extends Model {
 }
 
 class Rectangle extends Model {
-  constructor(id){
-    super(id, "Rectangle" +id);
+  constructor(){
+    id_rectangle +=1
+    super(id_rectangle, "Rectangle" +id_rectangle);
   }
 
   addVertex(x,y){
@@ -145,7 +164,6 @@ class Rectangle extends Model {
     super.addVertexColor(colorPicker);
     super.addVertexColor(colorPicker);
     super.addVertexColor(colorPicker);
-    newModel()
   }
   
   changeSideModel(panjang, lebar){
@@ -177,8 +195,9 @@ class Rectangle extends Model {
 }
 
 class Line extends Model {
-  constructor(id){
-    super(id, "Line"+id);
+  constructor(){
+    id_line +=1
+    super(id_line, "Line"+id_line);
   }
 
   render(gl){

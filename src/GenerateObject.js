@@ -1,10 +1,13 @@
-const refreshDaftarObjek = () => {
+const refreshDaftarObjek = (select) => {
     let inner = '<h3>Daftar Object</h3>';
     for (let i = 0; i < arrayObject.length; i++){
         if (!arrayObject[i].isEmpty()){
             inner += "<div>"
             inner += "<button onclick='select(" + i + ")'>" + arrayObject[i].name + "</button>"
-            inner += "<div>"
+            if (select == i){
+                inner += "<div id=daftar-vertex></div>"
+            }
+            inner += "</div>"
         }
         
     }
@@ -13,10 +16,43 @@ const refreshDaftarObjek = () => {
 
 };
 
+const refreshDaftarVertex = (id) => {
+    var sameVertex =false;
+    let inner =""
+    console.log(id);
+    for (let i = 0; i < arrayObject[id].getLengthVertices(); i++) {
+        if (arrayObject[id] instanceof Square || arrayObject[id] instanceof Rectangle) {
+            for (let j = 0; j < i; j++) {
+
+                if (arrayObject[id].getVertex(i)[0] == arrayObject[id].getVertex(j)[0] && arrayObject[id].getVertex(i)[1] == arrayObject[id].getVertex(j)[1]) {
+                    sameVertex = true;
+                }
+            }
+            
+        }
+        
+        if (!sameVertex) {
+            inner += "<div style='margin-left:20px;'> "
+            inner += "<button  onclick='selectVertex("+ id + ", "+ i + ")'>vertex "+(i+1)+"</button>"
+            inner += "</div>"
+        }
+        sameVertex = false;
+        
+    }
+
+    document.getElementById('daftar-vertex').innerHTML = inner;
+
+};
+
 function select(id){
+    refreshDaftarObjek(id)
     let inner = '';
-    if (arrayObject[id] instanceof Polygon){
+    if (arrayObject[id] instanceof Line){
+
+    }
+    else if (arrayObject[id] instanceof Polygon){
         inner += "<button onclick = createConvexHull(" +id+")>Convex Hull</button>"
+        inner += "<div><button onclick = addVertex(" + id + ")>Add Vertex</button></div>"
     }else if (arrayObject[id] instanceof Square){
         length = calculateSideLength(id)
         inner += "<p id='lengthSide'>Panjang sisi : "+length+"</p>"
@@ -35,7 +71,26 @@ function select(id){
         inner += "<button onclick = changeSideRec("+id+")>Ubah Sisi</button>"
     }
     document.getElementById('mode').innerHTML = inner;
+    refreshDaftarVertex(id)
 }
+
+function selectVertex(id, id_vertex) {
+    console.log(id_vertex);
+    let inner = '';
+    if (arrayObject[id] instanceof Line) {
+        
+    }
+    else if (arrayObject[id] instanceof Polygon) {
+        inner += "<div><button onclick = deleteVertex(" + id + "," + id_vertex + ")>Delete Vertex</button></div>"
+    } else if (arrayObject[id] instanceof Square) {
+
+    } else if (arrayObject[id] instanceof Rectangle) {
+
+    }
+    document.getElementById('mode-vertex').innerHTML = inner;
+}
+
+
 
 function calculateSideLength(id){
     t1 = arrayObject[id].getVertex(0)
@@ -73,4 +128,18 @@ function createConvexHull(id){
     const hull = convexHull(arrayObject[id],arrayObject[id].getLengthVertices());
     console.log(hull);
     arrayObject[id].changeVertices(hull);
+}
+
+// Polygon
+function addVertex(id) {
+    editPolygon = true
+    idPolygon = id
+    afterClick = true
+    firstClick = false
+}
+
+function deleteVertex(id, index_vertex) {
+    console.log("index tobe delete " + index_vertex)
+    arrayObject[id].deleteVertex(index_vertex);
+    refreshDaftarVertex(id)
 }

@@ -5,12 +5,16 @@ var gl;
 var draw;
 
 var index = 0;
+var id_model = 1;
 var program;
 var afterClick = false;
 var firstClick = true;
-const model = new Line(0);
+const model = new Line(1);
 var arrayObject = [model];
 
+// Polygon
+var editPolygon = false;
+var idPolygon = 0;
 
 window.onload = function init() {
 
@@ -21,11 +25,9 @@ window.onload = function init() {
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
 
-    //  Load shaders and initialize attribute buffers
     program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
     gl.clear(gl.COLOR_BUFFER_BIT);
-
 
     cBuffer = gl.createBuffer();
     vBuffer = gl.createBuffer();
@@ -33,17 +35,16 @@ window.onload = function init() {
     vColor = gl.getAttribLocation(program, "vColor");
 
 
-    // event listener mouse klik
     canvas.addEventListener("click", function (event) {
+        const x = 2 * (event.clientX - this.offsetLeft) / canvas.width - 1
+        const y = 2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1
+        var point = vec2(x,y)
         if (arrayObject[arrayObject.length - 1] instanceof Square){
-            const x = 2 * (event.clientX - this.offsetLeft) / canvas.width - 1
-            const y = 2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1
             arrayObject[arrayObject.length-1].addVertex(x,y);
+            resetClick()
             newModel()
         } else if (arrayObject[arrayObject.length-1] instanceof Polygon){
             if (firstClick){
-                var point = vec2(2 * (event.clientX-this.offsetLeft) / canvas.width - 1,
-                    2 * (canvas.height - (event.clientY-this.offsetTop)) / canvas.height - 1);
                 arrayObject[arrayObject.length - 1].addVertex(point);
                 arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
                 firstClick = false;
@@ -51,21 +52,24 @@ window.onload = function init() {
             }
             afterClick=true;
         } else if (arrayObject[arrayObject.length - 1] instanceof Rectangle){
-            const x = 2 * (event.clientX - this.offsetLeft) / canvas.width - 1
-            const y = 2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1
             arrayObject[arrayObject.length-1].addVertex(x,y);
+            resetClick()
             newModel();
+        } else if (arrayObject[arrayObject.length - 1] instanceof Line){
+            if (firstClick) {
+                arrayObject[arrayObject.length - 1].addVertex(point);
+                arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
+                firstClick = false;
+                afterClick = true;
+            }
+            else{
+                resetClick();
+                newModel();
+            }
+            
         }
 
-
-        // if (!firstClick){
-        //     newModel();
-        // }
-    
-        // afterClick = true;
-
     });
-
 
     canvas.addEventListener("dblclick", function () {
         newModel()
@@ -76,12 +80,35 @@ window.onload = function init() {
     canvas.addEventListener("mousemove", function (event) {
         var point = vec2(2 * (event.clientX - this.offsetLeft) / canvas.width - 1,
             2 * (canvas.height - (event.clientY - this.offsetTop)) / canvas.height - 1);
-        if (afterClick){
-            arrayObject[arrayObject.length - 1].addVertex(point);
-            arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
-            afterClick =false;
-        }else if(!firstClick){
-            arrayObject[arrayObject.length - 1].changeLastVertex(point);
+        if (arrayObject[arrayObject.length - 1] instanceof Square) {
+            
+        } else if (arrayObject[arrayObject.length - 1] instanceof Polygon) {
+            var idx;
+            if (arrayObject[arrayObject.length - 1] instanceof Polygon) {
+                if (editPolygon) {
+                    idx = idPolygon
+                }
+                else {
+                    idx = arrayObject.length - 1
+                }
+            }
+            if (afterClick) {
+                arrayObject[idx].addVertex(point);
+                arrayObject[idx].addVertexColor(colorPicker)
+                afterClick = false;
+            } else if (!firstClick) {
+                arrayObject[idx].changeLastVertex(point);
+            }
+        } else if (arrayObject[arrayObject.length - 1] instanceof Rectangle) {
+           
+        } else if (arrayObject[arrayObject.length - 1] instanceof Line) {
+            if (afterClick) {
+                arrayObject[arrayObject.length - 1].addVertex(point);
+                arrayObject[arrayObject.length - 1].addVertexColor(colorPicker)
+                afterClick = false;
+            } else if (!firstClick) {
+                arrayObject[arrayObject.length - 1].changeLastVertex(point);
+            }
         }
         
     });
@@ -105,60 +132,25 @@ window.onload = function init() {
 function newModel() {
     var value = document.getElementById("draw").value;
     if (value == "Line") {
-        arrayObject.push(new Line(arrayObject.length))
+        arrayObject.push(new Line())
     }
     else if (value == "Square") {
-        arrayObject.push(new Square(arrayObject.length))
+        arrayObject.push(new Square())
     }
     else if (value == "Rectangle") {
-        arrayObject.push(new Rectangle(arrayObject.length))
+        arrayObject.push(new Rectangle())
     }
     else if (value == "Polygon") {
-        arrayObject.push(new Polygon(arrayObject.length))
+        arrayObject.push(new Polygon())
     }
     refreshDaftarObjek();
 };
 
-function save(){
-    for (let i = 0; i < arrayObject.length; i++) {
-        if (arrayObject[i].isEmpty()) {
-            arrayObject.splice(i, 1);
-        }
-    }
-    const jsonFile = JSON.parse(JSON.stringify(arrayObject));
-    const downloadFile = document.createElement("a");
-    downloadFile.href = URL.createObjectURL(new Blob([JSON.stringify(jsonFile, null, 2)], {
-        type: "text/plain"
-    }));
-    downloadFile.setAttribute("download", "data.json");
-    document.body.appendChild(downloadFile);
-    downloadFile.click();
-    document.body.removeChild(downloadFile);
+function resetClick() {
+    afterClick = false;
+    firstClick = true;
 }
-function load() {
-    const file = document.getElementById("file-input").files[0];
-    var fileread;
-    let reader = new FileReader();
 
-    reader.readAsText(file);
-    var idx;
-
-    reader.onload = function () {
-        fileread = JSON.parse(reader.result);
-        for (let i = 0; i < fileread.length; i++) {
-            idx = fileread[i]["name"].search("Polygon");
-            if (idx != -1){
-                arrayObject.push(new Polygon(arrayObject.length));
-                for (let j = 0; j < fileread[i]["vertices"].length; j++) {
-                    arrayObject[arrayObject.length-1].addVertex(fileread[i]["vertices"][j]);
-                    arrayObject[arrayObject.length - 1].addVertexColor(fileread[i]["verticesColor"][j]);
-                }
-            }   
-        }
-        newModel()
-        console.log(arrayObject);
-    };
-}
 
 function changeColorVertices(hex){
     const arrayColor = hexToRgb(hex);
@@ -183,7 +175,59 @@ function hexToRgb(hex) {
     return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255, 1.0];
 }
 
-function resetClick(){
-    afterClick = false;
-    firstClick = true;
+
+function save() {
+    for (let i = 0; i < arrayObject.length; i++) {
+        if (arrayObject[i].isEmpty()) {
+            arrayObject.splice(i, 1);
+        }
+    }
+    const jsonFile = JSON.parse(JSON.stringify(arrayObject));
+    const downloadFile = document.createElement("a");
+    downloadFile.href = URL.createObjectURL(new Blob([JSON.stringify(jsonFile, null, 2)], {
+        type: "text/plain"
+    }));
+    downloadFile.setAttribute("download", "data.json");
+    document.body.appendChild(downloadFile);
+    downloadFile.click();
+    document.body.removeChild(downloadFile);
+}
+
+function load() {
+    const file = document.getElementById("file-input").files[0];
+    var fileread;
+    let reader = new FileReader();
+
+    reader.readAsText(file);
+
+    reader.onload = function () {
+        fileread = JSON.parse(reader.result);
+        for (let i = 0; i < fileread.length; i++) {
+
+            if (fileread[i]["name"].includes("Line")) {
+                arrayObject.push(new Line());
+                for (let j = 0; j < fileread[i]["vertices"].length; j++) {
+                    arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][j]);
+                    arrayObject[arrayObject.length - 1].addVertexColor(fileread[i]["verticesColor"][j]);
+                }
+            }
+            else if (fileread[i]["name"].includes("Square")) {
+                arrayObject.push(new Square());
+                arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][0][0], fileread[i]["vertices"][0][1]);
+            }
+            else if (fileread[i]["name"].includes("Rectangle")) {
+                arrayObject.push(new Rectangle());
+                arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][0][0], fileread[i]["vertices"][0][1]);
+            } else {
+                arrayObject.push(new Polygon());
+                for (let j = 0; j < fileread[i]["vertices"].length; j++) {
+                    arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][j]);
+                    arrayObject[arrayObject.length - 1].addVertexColor(fileread[i]["verticesColor"][j]);
+                }
+            }
+
+        }
+        newModel()
+        console.log(arrayObject);
+    };
 }
