@@ -242,10 +242,18 @@ function load() {
             else if (fileread[i]["name"].includes("Square")) {
                 arrayObject.push(new Square());
                 arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][0][0], fileread[i]["vertices"][0][1]);
+                arrayObject[arrayObject.length-1].deleteVerticesColor();
+                for (let j=0;j < fileread[i]["vertices"].length; j++){
+                    arrayObject[arrayObject.length-1].addVertexColor(fileread[i]["verticesColor"][j]);
+                }
             }
             else if (fileread[i]["name"].includes("Rectangle")) {
                 arrayObject.push(new Rectangle());
                 arrayObject[arrayObject.length - 1].addVertex(fileread[i]["vertices"][0][0], fileread[i]["vertices"][0][1]);
+                arrayObject[arrayObject.length-1].deleteVerticesColor();
+                for (let j=0;j < fileread[i]["vertices"].length; j++){
+                    arrayObject[arrayObject.length-1].addVertexColor(fileread[i]["verticesColor"][j]);
+                }
             } else {
                 arrayObject.push(new Polygon());
                 for (let j = 0; j < fileread[i]["vertices"].length; j++) {

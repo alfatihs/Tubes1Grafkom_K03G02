@@ -50,8 +50,15 @@ function select(id){
     idxModelSelected = id
     let inner = '';
     if (arrayObject[id] instanceof Line){
+        length_line = calculateLineLength(id)
 
+        inner += "<p> Panjang Garis : " +length_line + "</p>"
+        inner += "<p> Masukkan Panjang Baru </p>"
+        inner += "<input type=number id=new_length_line></input>"
+        inner += "<p> vertex 2 = " + arrayObject[id].getVertex[1]+ "</p>"
+        inner += "<button onclick = changeLineLength("+id+")>Ubah Panjang</button>"
     }
+   
     else if (arrayObject[id] instanceof Polygon){
         inner += "<button onclick = createConvexHull(" +id+")>Convex Hull</button>"
         inner += "<div><button onclick = addVertex(" + id + ")>Add Vertex</button></div>"
@@ -97,6 +104,46 @@ function selectVertex(id, id_vertex) {
 
 
 
+function calculateLineLength(id){
+    var lineattr = new Array()
+    lineattr[0] = arrayObject[id].getVertex(0)[0]
+    lineattr[1] = arrayObject[id].getVertex(0)[1]
+    lineattr[2] = arrayObject[id].getVertex(1)[0]
+    lineattr[3] = arrayObject[id].getVertex(1)[1]
+    return(Math.sqrt((lineattr[3]-lineattr[1])*(lineattr[3]-lineattr[1])+(lineattr[2]-lineattr[0])*(lineattr[2]-lineattr[0])))
+}
+
+function dilateLine(x1, y1, x2, y2, scale) {
+    var dx = x2 - x1;
+    var dy = y2 - y1;
+    var newX1 = x1 - dx * (scale - 1) / 2;
+    var newY1 = y1 - dy * (scale - 1) / 2;
+    var newX2 = x2 + dx * (scale - 1) / 2;
+    var newY2 = y2 + dy * (scale - 1) / 2;
+    return [newX1, newY1, newX2, newY2];
+  }
+
+function changeLineLength(id){
+    old_length = calculateLineLength(id)
+    new_length = document.getElementById('new_length_line').value
+    scale_factor = new_length / old_length
+    var lineattr = new Array()
+    lineattr[0] = arrayObject[id].getVertex(0)[0]
+    lineattr[1] = arrayObject[id].getVertex(0)[1]
+    lineattr[2] = arrayObject[id].getVertex(1)[0]
+    lineattr[3] = arrayObject[id].getVertex(1)[1]
+    
+    scaledCoords = dilateLine(lineattr[0], lineattr[1], lineattr[2], lineattr[3], scale_factor)
+    // arrayObject[id].getVertex[0]
+
+    // new_x
+    new_vertex_position = arrayObject[id].changeVertices([vec2(scaledCoords[0],scaledCoords[1]),vec2(scaledCoords[2],scaledCoords[3])])
+    // arrayObject[id].changeVertex(1,)
+
+
+    
+}
+
 function calculateSideLength(id){
     t1 = arrayObject[id].getVertex(0)
     t2 = arrayObject[id].getVertex(1)
@@ -122,6 +169,7 @@ function changeSide(id){
     panjang = document.getElementById('length').value
     arrayObject[id].changeSideModel(Number(panjang))
 }
+
 
 function changeSideRec(id){
     panjang = document.getElementById('height').value
