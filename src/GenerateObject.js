@@ -68,18 +68,12 @@ function select(id){
         inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
         inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }else if (arrayObject[id] instanceof Square){
-        length = calculateSideLength(id)
-        inner += "<p id='lengthSide'>Panjang sisi : "+length+"</p>"
         inner += "<p>New Length</p>"
         inner += "<input type=number id='length'></input>"
-        inner += "<button onclick = changeSide("+id+")>Ubah Panjang Sisi</button>"
+        inner += "<button onclick = changeSide("+id+")>Ubah Panjang Sisi</button><br></br>"
         inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
         inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }else if (arrayObject[id] instanceof Rectangle){
-        width = calculateRecWidth(id)
-        height = calculateRecHeight(id)
-        inner += "<p id='widthText'>Lebar sisi : "+width+"</p>"
-        inner += "<p id='HeightText'>Panjang sisi : "+height+"</p>"
         inner += "<p>Lebar Baru</p>"
         inner += "<input type=number id='width'></input>"
         inner += "<p>Panjang Baru</p>"
@@ -98,19 +92,35 @@ function selectVertex(id, id_vertex) {
     vertexSelected = true
     idxVertexSelected = id_vertex
     let inner = '';
+    inner += "<button onclick = changeV("+id+","+id_vertex+",'x',1)>testing</button>";
     if (arrayObject[id] instanceof Line) {
-        
+        var valX = arrayObject[id].getVertex(id_vertex)[0]
+        var valY = arrayObject[id].getVertex(id_vertex)[1]
+        inner+="<p>Change X Coordinates</p>+<div class='slidecontainer'><input type='range' min='-10' max='10' value="+valX+" class='slider' id='myRange' onChange = changeV("+id+","+id_vertex+",'x',this.value/10)></div>"
+        inner+="<p>Change Y Coordinates</p>+<div class='slidecontainer'><input type='range' min='-10' max='10' value="+valY+" class='slider' id='myRange' onChange = changeV("+id+","+id_vertex+",'y',this.value/10)></div>"
     }
     else if (arrayObject[id] instanceof Polygon) {
         inner += "<div><button onclick = deleteVertex(" + id + "," + id_vertex + ")>Delete Vertex</button></div>"
+        var valX = arrayObject[id].getVertex(id_vertex)[0]
+        var valY = arrayObject[id].getVertex(id_vertex)[1]
+        inner+="<p>Change X Coordinates</p>+<div class='slidecontainer'><input type='range' min='-10' max='10' value="+valX+" class='slider' id='myRange' onChange = changeV("+id+","+id_vertex+",'x',this.value/10)></div>"
+        inner+="<p>Change Y Coordinates</p>+<div class='slidecontainer'><input type='range' min='-10' max='10' value="+valY+" class='slider' id='myRange' onChange = changeV("+id+","+id_vertex+",'y',this.value/10)></div>"
     } else if (arrayObject[id] instanceof Square) {
-
+        
     } else if (arrayObject[id] instanceof Rectangle) {
 
     }
     document.getElementById('mode-vertex').innerHTML = inner;
 }
 
+function changeV(id, id_vertex, axis, value){
+    if(axis=="x"){
+        arrayObject[id].changeVertex(id_vertex, vec2(value,((arrayObject[id].getVertex(id_vertex)[1]))))
+
+    }else{
+        arrayObject[id].changeVertex(id_vertex, vec2((arrayObject[id].getVertex(id_vertex)[0]),(value)))
+    }
+}
 
 function calculateLineLength(id){
     var lineattr = new Array()
