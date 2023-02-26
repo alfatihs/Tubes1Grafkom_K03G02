@@ -55,19 +55,26 @@ function select(id){
         inner += "<p> Panjang Garis : " +length_line + "</p>"
         inner += "<p> Masukkan Panjang Baru </p>"
         inner += "<input type=number id=new_length_line></input>"
-        inner += "<p> vertex 2 = " + arrayObject[id].getVertex[1]+ "</p>"
-        inner += "<button onclick = changeLineLength("+id+")>Ubah Panjang</button>"
+        // inner += "<p> vertex 2 = " + arrayObject[id].getVertex[1]+ "</p>"
+        inner += "<button onclick = changeLineLength("+id+")>Ubah Panjang</button><br></br>"
+        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
+        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
+        
     }
    
     else if (arrayObject[id] instanceof Polygon){
         inner += "<button onclick = createConvexHull(" +id+")>Convex Hull</button>"
-        inner += "<div><button onclick = addVertex(" + id + ")>Add Vertex</button></div>"
+        inner += "<div><button onclick = addVertex(" + id + ")>Add Vertex</button></div><br></br>"
+        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
+        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }else if (arrayObject[id] instanceof Square){
         length = calculateSideLength(id)
         inner += "<p id='lengthSide'>Panjang sisi : "+length+"</p>"
         inner += "<p>New Length</p>"
         inner += "<input type=number id='length'></input>"
         inner += "<button onclick = changeSide("+id+")>Ubah Panjang Sisi</button>"
+        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
+        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }else if (arrayObject[id] instanceof Rectangle){
         width = calculateRecWidth(id)
         height = calculateRecHeight(id)
@@ -77,7 +84,9 @@ function select(id){
         inner += "<input type=number id='width'></input>"
         inner += "<p>Panjang Baru</p>"
         inner += "<input type=number id='height'></input>"
-        inner += "<button onclick = changeSideRec("+id+")>Ubah Sisi</button>"
+        inner += "<button onclick = changeSideRec("+id+")>Ubah Sisi</button><br></br>"
+        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
+        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }
     document.getElementById('mode').innerHTML = inner;
     refreshDaftarVertex(id)
@@ -101,7 +110,6 @@ function selectVertex(id, id_vertex) {
     }
     document.getElementById('mode-vertex').innerHTML = inner;
 }
-
 
 
 function calculateLineLength(id){
@@ -195,4 +203,35 @@ function deleteVertex(id, index_vertex) {
     console.log("index tobe delete " + index_vertex)
     arrayObject[id].deleteVertex(index_vertex);
     refreshDaftarVertex(id)
+}
+
+function translation(id,axis,value){
+    if (axis=='x'){
+        if(value=='pos'){
+            for (i=0; i <= arrayObject[id].getLengthVertices()-1; i++){
+                arrayObject[id].changeVertex(i, vec2((arrayObject[id].getVertex(i)[0]),(arrayObject[id].getVertex(i)[1]-0.1)))
+            }   
+        }
+        else if(value=='neg'){
+            for (i=0; i <= arrayObject[id].getLengthVertices()-1; i++){
+                arrayObject[id].changeVertex(i, vec2((arrayObject[id].getVertex(i)[0]-0.2),(arrayObject[id].getVertex(i)[1]-0.1)))
+            }   
+        }
+    }else if (axis =='y'){
+        if(value=='pos'){
+            for (i=0; i <= arrayObject[id].getLengthVertices()-1; i++){
+                arrayObject[id].changeVertex(i, vec2((arrayObject[id].getVertex(i)[0]-0.1),(arrayObject[id].getVertex(i)[1]+0)))
+            }   
+        }
+        else if(value=='neg'){
+            for (i=0; i <= arrayObject[id].getLengthVertices()-1; i++){
+                arrayObject[id].changeVertex(i, vec2((arrayObject[id].getVertex(i)[0]-0.1),(arrayObject[id].getVertex(i)[1]-0.2)))
+            }   
+        }
+    }
+
+    for (i=0; i <= arrayObject[id].getLengthVertices()-1; i++){
+        arrayObject[id].changeVertex(i, vec2(arrayObject[id].getVertex(i)[0]+0.1,arrayObject[id].getVertex(i)[1]+0.1))
+    }
+
 }
