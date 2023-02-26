@@ -71,8 +71,6 @@ function select(id) {
         inner += "<input type=number id=dilatationFactor></input>"
         inner += "<button onclick = dilatation(" + id + ")>Dilatasi Objek</button>"
     } else if (arrayObject[id] instanceof Square) {
-        length = calculateSideLength(id)
-        inner += "<p id='lengthSide'>Panjang sisi : " + length + "</p>"
         inner += "<p>New Length</p>"
         inner += "<input type=number id='length'></input>"
         inner += "<button onclick = changeSide(" + id + ")>Ubah Panjang Sisi</button><br>"
@@ -80,19 +78,6 @@ function select(id) {
         inner += "<button onclick = translation(" + id + ",'y','pos')>+</button> Y-Translation <button onclick = translation(" + id + ",'y','neg')>-</button>"
         inner += "<input type=number id=dilatationFactor></input>"
         inner += "<button onclick = dilatation(" + id + ")>Dilatasi Objek</button>"
-    } else if (arrayObject[id] instanceof Rectangle) {
-        width = calculateRecWidth(id)
-        height = calculateRecHeight(id)
-        inner += "<p id='widthText'>Lebar sisi : " + width + "</p>"
-        inner += "<p id='HeightText'>Panjang sisi : " + height + "</p>"
-        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
-        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
-    }else if (arrayObject[id] instanceof Square){
-        inner += "<p>New Length</p>"
-        inner += "<input type=number id='length'></input>"
-        inner += "<button onclick = changeSide("+id+")>Ubah Panjang Sisi</button><br></br>"
-        inner += "<button onclick = translation("+id+",'x','pos')>+</button> X-Translation <button onclick = translation("+id+",'x','neg')>-</button><br>"
-        inner += "<button onclick = translation("+id+",'y','pos')>+</button> Y-Translation <button onclick = translation("+id+",'y','neg')>-</button>" 
     }else if (arrayObject[id] instanceof Rectangle){
         inner += "<p>Lebar Baru</p>"
         inner += "<input type=number id='width'></input>"
@@ -114,7 +99,6 @@ function selectVertex(id, id_vertex) {
     vertexSelected = true
     idxVertexSelected = id_vertex
     let inner = '';
-    inner += "<button onclick = changeV("+id+","+id_vertex+",'x',1)>testing</button>";
     if (arrayObject[id] instanceof Line) {
 
         var valX = arrayObject[id].getVertex(id_vertex)[0]
@@ -145,7 +129,7 @@ function changeV(id, id_vertex, axis, value){
     }
 }
 
-function calculateLineLength(id) {
+function calculateLineLength(id){
     var lineattr = new Array()
     lineattr[0] = arrayObject[id].getVertex(0)[0]
     lineattr[1] = arrayObject[id].getVertex(0)[1]

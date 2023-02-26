@@ -125,7 +125,6 @@ class Square extends Model {
   }
   
   changeSideModel(newLength){
-    newLength = newLength / 10
     newVertices = []
     ver0 = this.getVertex(0);
     newVertices.push(ver0)
@@ -173,8 +172,6 @@ class Rectangle extends Model {
   }
   
   changeSideModel(panjang, lebar){
-    panjang = panjang / 10
-    lebar = lebar / 10
     newVertices = []
     ver0 = this.getVertex(0);
     newVertices.push(ver0)
